@@ -1,1 +1,38 @@
+Polecenie instalacji serwera DHCP:
+sudo apt update
+sudo apt install isc-dhcp-server
 
+Konfiguracja interfejsu sieciowego:
+a. sudo ip link set eth1 down
+b. sudo ip addr add 10.123.86.1/24 dev eth1
+c. sudo ip link set eth1 up
+d. sudo ip route add default via 10.123.86.254
+e. sudo nano /etc/dhcp/dhcpd.conf option domain-name-servers 1.1.1.1;
+
+Konfiguracja serwera DHCP (plik conf):
+sudo nano /etc/dhcp/dhcpd.conf 
+subnet 10.123.86.0 netmask 255.255.255.0 {
+range 10.123.86.100 10.123.86.200;
+option routers 10.123.86.1;
+option domain-name-servers 1.1.1.1;
+}
+sudo nano /etc/default/isc-dhcp-server
+INTERFACESv4="eth1"
+Polecenie do uruchomienia serwera DHCP przez systemd:
+sudo systemctl start isc-dhcp-server
+Polecenie do wypisania logów serwera DHCP:
+journalctl -u isc-dhcp-server
+Polecenia do sprawdzenia przydzielonych adresów na komputerze klienckim:
+ip a
+Filtr pakietów DHCP Discover (Wireshark):
+dhcp.option.dhcp == 1
+Filtr pakietów DHCP Offer (Wireshark):
+dhcp.option.dhcp == 2
+Filtr pakietów DHCP Request (Wireshark):
+dhcp.option.dhcp == 3
+Filtr pakietów DHCP ACK (Wireshark):
+dhcp.option.dhcp == 5
+Adres IP przydzielony przed zmianą MAC:
+10.123.86.100/24
+Adres IP przydzielony po zmianie MAC:
+10.123.86.101/24
