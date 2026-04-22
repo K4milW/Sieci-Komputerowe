@@ -1,0 +1,115 @@
+1.POLECENIE: ip -br link | awk '{print $1, $2}'
+WYNIK:
+lo UNKNOWN
+enp0s31f6 DOWN
+wlp0s20f3 UP
+---------------------------------------------------------------------
+2.POLECENIE: arp -a
+WYNIK: _gateway (192.168.0.1) at 74:da:88:85:a7:a8 [ether] on wlp0s20f3
+---------------------------------------------------------------------
+3.POLECENIE: 
+sudo ip link set dev eth0 down
+sudo ip link set dev eth0 address 00:11:22:33:44:55
+sudo ip link set dev eth0 up
+---------------------------------------------------------------------
+4.POLECENIE: ping -b 192.168.1.255
+WYNIK: PING 192.168.1.255 (192.168.1.255) 56(84) bytes of data.
+---------------------------------------------------------------------
+5.POLECENIE: nmap -p 22 --open 192.168.0.0/24
+WYNIK:
+Starting Nmap 7.92 ( https://nmap.org ) at 2026-04-22 17:36 CEST
+Nmap scan report for 192.168.0.198
+Host is up (0.0045s latency).
+PORT   STATE SERVICE
+22/tcp open  ssh
+---------------------------------------------------------------------
+6.POLECENIE: nmap -p- 127.0.0.1
+WYNIK:
+Starting Nmap 7.92 ( https://nmap.org ) at 2026-04-22 17:38 CEST
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.000066s latency).
+Not shown: 65530 closed tcp ports (conn-refused)
+PORT      STATE SERVICE
+631/tcp   open  ipp
+1716/tcp  open  xmsg
+5355/tcp  open  llmnr
+8828/tcp  open  unknown
+38355/tcp open  unknown
+Nmap done: 1 IP address (1 host up) scanned in 1.88 seconds
+---------------------------------------------------------------------
+7.POLECENIE: sudo netstat -tulnp
+WYNIK:
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      774/systemd-resolve 
+tcp        0      0 127.0.0.1:38355         0.0.0.0:*               LISTEN      6479/exe            
+tcp        0      0 127.0.0.54:53           0.0.0.0:*               LISTEN      774/systemd-resolve 
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      774/systemd-resolve 
+tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN      1057/cupsd          
+tcp        0      0 127.0.0.1:8828          0.0.0.0:*               LISTEN      6479/exe            
+tcp6       0      0 :::1716                 :::*                    LISTEN      2141/kdeconnectd    
+tcp6       0      0 :::5355                 :::*                    LISTEN      774/systemd-resolve 
+tcp6       0      0 ::1:631                 :::*                    LISTEN      1057/cupsd          
+udp        0      0 0.0.0.0:59893           0.0.0.0:*                           2823/firefox        
+udp        0      0 127.0.0.54:53           0.0.0.0:*                           774/systemd-resolve 
+udp        0      0 127.0.0.53:53           0.0.0.0:*                           774/systemd-resolve 
+udp        0      0 127.0.0.1:323           0.0.0.0:*                           844/chronyd         
+udp        0      0 0.0.0.0:50532           0.0.0.0:*                           2141/kdeconnectd    
+udp        0      0 0.0.0.0:34591           0.0.0.0:*                           2823/firefox        
+udp        0      0 0.0.0.0:5353            0.0.0.0:*                           2141/kdeconnectd    
+udp        0      0 0.0.0.0:5353            0.0.0.0:*                           838/avahi-daemon: r 
+udp        0      0 0.0.0.0:5355            0.0.0.0:*                           774/systemd-resolve 
+udp6       0      0 ::1:323                 :::*                                844/chronyd         
+udp6       0      0 :::1716                 :::*                                2141/kdeconnectd    
+udp6       0      0 :::53013                :::*                                2141/kdeconnectd    
+udp6       0      0 :::5353                 :::*                                838/avahi-daemon: r 
+udp6       0      0 :::5353                 :::*                                2141/kdeconnectd    
+udp6       0      0 :::5355                 :::*                                774/systemd-resolve 
+---------------------------------------------------------------------
+8.POLECENIE: ip route show default
+WYNIK: default via 192.168.0.1 dev wlp0s20f3 proto dhcp src 192.168.0.84 metric 600 
+---------------------------------------------------------------------
+9.POLECENIE: traceroute kosmatka.pl
+WYNIK:
+traceroute to kosmatka.pl (217.28.148.190), 30 hops max, 60 byte packets
+ 1  _gateway (192.168.0.1)  1.878 ms  3.247 ms  3.221 ms
+ 2  192.168.254.1 (192.168.254.1)  13.693 ms  13.703 ms  13.898 ms
+ 3  * * *
+ 4  * * *
+ 5  * * *
+ 6  * * *
+ 7  * * *
+ 8  user-89-108-210-34.play-internet.pl (89.108.210.34)  32.924 ms  23.898 ms  19.883 ms
+ 9  * * *
+10  * * *
+11  83-238-113-57.static.inetia.pl (83.238.113.57)  29.840 ms  30.512 ms  29.794 ms
+---------------------------------------------------------------------
+10.POLECENIE:cat /etc/resolv.conf
+WYNIK: nameserver 127.0.0.53
+---------------------------------------------------------------------
+11.POLECENIE: sudo cat /etc/hosts
+WYNIK:
+# Loopback entries; do not change.
+# For historical reasons, localhost precedes localhost.localdomain:
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+# See hosts(5) for proper format and other examples:
+# 192.168.1.10 foo.example.org foo
+# 192.168.1.13 bar.example.org bar
+---------------------------------------------------------------------
+12.POLECENIE: dig @8.8.8.8 kosmatka.pl MX
+WYNIK:
+ANSWER SECTION:
+kosmatka.pl.            4881    IN      MX      10 mx1.privateemail.com.
+kosmatka.pl.            4881    IN      MX      10 mx2.privateemail.com.
+---------------------------------------------------------------------
+13.POLECENIE: dig google.pl AAAA +short
+WYNIK: 2a00:1450:4025:804::5e
+---------------------------------------------------------------------
+14.POLECENIE: whois kosmatka.pl
+WYNIK:
+created:                        2022.12.02 12:27:10
+last modified:                  2022.12.02 12:33:53
+renewal date:                   2032.12.02 12:27:10
+---------------------------------------------------------------------
+15.POLECENIE:https://www.dns.pl/deleted_domains.txt
